@@ -9,6 +9,8 @@
 #include "types.h"
 #include "autogrowstream.h"
 #include "bbl-certs.h"
+#include "devices/2.8/screen.h"
+// #include "xtouch/cloud.hpp"
 // #include "xtouch/ams-status.hpp"
 
 WiFiClientSecure xtouch_wiFiClientSecure;
@@ -46,11 +48,12 @@ void xtouch_mqtt_topic_setup()
     xtouch_mqtt_report_topic = xtouch_device_topic + String("/report");
 }
 
-void xtouch_mqtt_parse_tray(uint8_t tray_idx, char* color){
+void xtouch_mqtt_parse_tray(uint8_t tray_idx, char* color,int loaded){
 
     unsigned long long number = strtoll(color, NULL, 16);
     number<<=8;
     number|=tray_idx<<4;
+    number|=loaded;
 
     xtouch_mqtt_sendMsg(XTOUCH_ON_AMS_SLOT_UPDATE,number);
 }
@@ -98,7 +101,7 @@ void xtouch_mqtt_processPushStatus(JsonDocument &incomingJson)
         }
         if (incomingJson["print"].containsKey("home_flag"))
         {
-            bambuStatus.home_flag, incomingJson["print"]["home_flag"].as<int>();
+            bambuStatus.home_flag = incomingJson["print"]["home_flag"].as<int>();
         }
 
         if (incomingJson["print"].containsKey("hw_switch_state"))
@@ -291,7 +294,7 @@ void xtouch_mqtt_processPushStatus(JsonDocument &incomingJson)
             xtouch_mqtt_sendMsg(XTOUCH_ON_NOZZLE_TARGET_TEMP, bambuStatus.nozzle_target_temper);
         }
 
-        if (incomingJson["print"].containsKey("chamber_temper"))
+        if (incomingJson["print"].containsKey("chamber_temper") && !xTouchConfig.xTouchChamberSensorEnabled)
         {
             bambuStatus.chamber_temper = incomingJson["print"]["chamber_temper"].as<double>();
             xtouch_mqtt_sendMsg(XTOUCH_ON_CHAMBER_TEMP, bambuStatus.chamber_temper);
@@ -525,8 +528,9 @@ void xtouch_mqtt_processPushStatus(JsonDocument &incomingJson)
                     for (uint8_t tray_idx=0;tray_idx<trays.size();tray_idx++){
                         memset(color,0,16);
                         trays[tray_idx]["tray_color"].as<String>().toCharArray(color,16);
+
                         color[6]=0;
-                        xtouch_mqtt_parse_tray(tray_idx+1,color);
+                        xtouch_mqtt_parse_tray(tray_idx+1,color,trays[tray_idx]["n"].as<int>());
                     }
                 }
 
@@ -621,7 +625,7 @@ void xtouch_mqtt_processPushStatus(JsonDocument &incomingJson)
             memset(color,0,16);
             incomingJson["print"]["vt_tray"]["tray_color"].as<String>().toCharArray(color,16);
             color[6]=0;
-            xtouch_mqtt_parse_tray(0,color);
+            xtouch_mqtt_parse_tray(0,color,incomingJson["print"]["vt_tray"]["n"].as<int>());
         }
         else
         {
@@ -875,6 +879,7 @@ void xtouch_mqtt_connect()
                 }
                 cloud.clearDeviceList();
                 cloud.clearPairList();
+                cloud.clearTokens();
                 ESP.restart();
 
                 break;

@@ -180,45 +180,55 @@ void onXTouchAMSUpdate(lv_event_t *e)
 
     lv_obj_t *target = lv_event_get_target(e);
     lv_msg_t *m = lv_event_get_msg(e);
-    uint16_t user_data = (uint16_t )lv_event_get_user_data(e);
+    uint16_t user_data = (uint16_t)lv_event_get_user_data(e);
 
     struct XTOUCH_MESSAGE_DATA *message = (struct XTOUCH_MESSAGE_DATA *)m->payload;
 
-    if (message->data==0xFFFFFFFF){
+    if (message->data == 0xFFFFFFFF)
+    {
         reloadAMS();
         return;
     }
 
-    uint16_t tray_id = ((message->data>>4) & 0x0F);
+    uint16_t tray_id = ((message->data >> 4) & 0x0F);
+    uint16_t loaded = ((message->data) & 0x01);
 
-    if (user_data == tray_id ){
+    if (user_data == tray_id)
+    {
         lv_color_t color = lv_color_hex(message->data >> 8);
-        lv_color_t color_inv = lv_color_hex(( 0xFFFFFF - (message->data >> 8))  & 0xFFFFFF);
+        lv_color_t color_inv = lv_color_hex((0xFFFFFF - (message->data >> 8)) & 0xFFFFFF);
 
-        printf(" tray_now: %d, tray_tar: %d, slot: %d, color: %06llX \n",bambuStatus.m_tray_now,bambuStatus.m_tray_tar,tray_id,message->data >> 8);
-        
-        slot_cache[tray_id]=message->data;
+        printf(" tray_now: %d, tray_tar: %d, slot: %d, color: %06llX \n", bambuStatus.m_tray_now, bambuStatus.m_tray_tar, tray_id, message->data >> 8);
+
+        slot_cache[tray_id] = message->data;
         lv_obj_set_style_bg_color(target, color, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_text_color(target, color_inv, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-        lv_obj_set_style_border_color(target,color_inv, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_color(target, color_inv, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-        if (tray_id==0) tray_id=254+1;
+        if (tray_id == 0)
+            tray_id = 254 + 1;
 
-        lv_obj_set_style_border_color(target,color, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_color(target, color, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-        if (bambuStatus.m_tray_now+1==tray_id){
+        if (bambuStatus.m_tray_now + 1 == tray_id)
+        {
             lv_label_set_text(target, "L");
-            lv_obj_set_style_border_color(target,color_inv, LV_PART_MAIN | LV_STATE_DEFAULT);
-        }else if (bambuStatus.m_tray_pre+1==tray_id && bambuStatus.m_tray_pre!=bambuStatus.m_tray_tar){
+            lv_obj_set_style_border_color(target, color_inv, LV_PART_MAIN | LV_STATE_DEFAULT);
+        }
+        else if (bambuStatus.m_tray_pre + 1 == tray_id && bambuStatus.m_tray_pre != bambuStatus.m_tray_tar)
+        {
             lv_label_set_text(target, "U");
-        }else{
+        }
+        else if (!loaded)
+        {
+            lv_label_set_text(target, "X");
+        }
+        else
+        {
             lv_label_set_text(target, "");
         }
-        
     }
-    
-
 }
 
 void onXTouchChamberTemp(lv_event_t *e)
