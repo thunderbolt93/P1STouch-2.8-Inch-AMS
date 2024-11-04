@@ -943,18 +943,18 @@ lv_obj_t *ui_homeComponent_create(lv_obj_t *comp_parent)
     lv_obj_set_style_text_color(cui_mainScreenCentral, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(cui_mainScreenCentral, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    // lv_obj_t *cui_mainScreenFileName;
-    // cui_mainScreenFileName = lv_label_create(cui_mainScreenCentral);
-    // lv_obj_set_width(cui_mainScreenFileName, LV_SIZE_CONTENT);  /// 1
-    // lv_obj_set_height(cui_mainScreenFileName, LV_SIZE_CONTENT); /// 1
-    // lv_obj_set_align(cui_mainScreenFileName, LV_ALIGN_LEFT_MID);
-    // lv_obj_set_style_text_align(cui_mainScreenFileName, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
-    // lv_label_set_text(cui_mainScreenFileName, "");
-    // lv_obj_set_style_text_font(cui_mainScreenFileName, &lv_font_montserrat_14, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_t *cui_mainScreenFileName;
+    cui_mainScreenFileName = lv_label_create(cui_mainScreenCentral);
+    lv_obj_set_width(cui_mainScreenFileName, LV_SIZE_CONTENT);  /// 1
+    lv_obj_set_height(cui_mainScreenFileName, LV_SIZE_CONTENT); /// 1
+    lv_obj_set_align(cui_mainScreenFileName, LV_ALIGN_LEFT_MID);
+    lv_obj_set_style_text_align(cui_mainScreenFileName, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_label_set_text(cui_mainScreenFileName, "");
+    lv_obj_set_style_text_font(cui_mainScreenFileName, &lv_font_montserrat_14, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     
-    // lv_obj_add_event_cb(cui_mainScreenFileName, onXTouchFilenameUpdate, LV_EVENT_MSG_RECEIVED, NULL);
-    // lv_msg_subsribe_obj(XTOUCH_ON_FILENAME_UPDATE, cui_mainScreenFileName, NULL);
+    lv_obj_add_event_cb(cui_mainScreenFileName, onXTouchFilenameUpdate, LV_EVENT_MSG_RECEIVED, NULL);
+    lv_msg_subsribe_obj(XTOUCH_ON_FILENAME_UPDATE, cui_mainScreenFileName, NULL);
 
 
     lv_obj_t *cui_mainScreenSpeedIcon;
@@ -1240,7 +1240,7 @@ lv_obj_t *ui_homeComponent_create(lv_obj_t *comp_parent)
     children[UI_COMP_HOMECOMPONENT_MAINSCREENLEFT_MAINSCREENCENTRAL] = cui_mainScreenCentral;
     children[UI_COMP_HOMECOMPONENT_MAINSCREENLEFT_MAINSCREENCENTRAL_MAINSCREENSPEEDICON] = cui_mainScreenSpeedIcon;
     children[UI_COMP_HOMECOMPONENT_MAINSCREENLEFT_MAINSCREENCENTRAL_MAINSCREENSPEEDDROPDOWN] = cui_mainScreenSpeedDropDown;
-    // children[UI_COMP_HOMECOMPONENT_MAINSCREENLEFT_MAINSCREENCENTRAL_MAINSCREENFILENAME] = cui_mainScreenFileName;
+    children[UI_COMP_HOMECOMPONENT_MAINSCREENLEFT_MAINSCREENCENTRAL_MAINSCREENFILENAME] = cui_mainScreenFileName;
     children[UI_COMP_HOMECOMPONENT_MAINSCREENRIGHT] = cui_mainScreenRight;
     children[UI_COMP_HOMECOMPONENT_MAINSCREENRIGHT_MAINSCREENLIGHTBUTTON] = cui_mainScreenLightButton;
     children[UI_COMP_HOMECOMPONENT_MAINSCREENRIGHT_MAINSCREENLIGHTBUTTON_MAINSCREENLIGHTBUTTONICON] = cui_mainScreenLightButtonIcon;
