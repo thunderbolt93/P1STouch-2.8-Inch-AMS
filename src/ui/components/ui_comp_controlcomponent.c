@@ -7,7 +7,9 @@ void ui_event_comp_controlComponent_controlScreenRange(lv_event_t *e)
     lv_obj_t **comp_controlComponent = lv_event_get_user_data(e);
     if (event_code == LV_EVENT_CLICKED)
     {
-        controlMode.inc = controlMode.inc == 1 ? 10 : 1;
+        if (controlMode.inc==1)  controlMode.inc =10;
+        else if (controlMode.inc==10)  controlMode.inc =100;
+        else if (controlMode.inc==100)  controlMode.inc =1;
         onControlRange(e);
     }
 }
@@ -76,9 +78,12 @@ void ui_event_comp_controlComponent_controlScreenRight(lv_event_t *e)
 
 void onXtouchRangeChange(lv_event_t *e)
 {
-
     lv_obj_t *target = lv_event_get_target(e);
-    lv_label_set_text(target, controlMode.inc == 1 ? "1" : "10");
+    switch (controlMode.inc){
+        case 1: lv_label_set_text(target, "1");break;
+        case 10: lv_label_set_text(target, "10");break;
+        case 100: lv_label_set_text(target, "100");break;
+    }
 }
 
 void onXTouchAxisChange(lv_event_t *e)
