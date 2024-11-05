@@ -4,6 +4,7 @@
 const char *xtouch_paths_eeprom = "/eeprom.bin";
 const char *xtouch_paths_root = "/xtouch";
 const char *xtouch_paths_config = "/config.json";
+const char *xtouch_paths_timezones = "/timezones.json";
 
 const char *xtouch_paths_settings = "/xtouch/settings.json";
 const char *xtouch_paths_printers = "/xtouch/printer.json";
