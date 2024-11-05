@@ -132,9 +132,19 @@ bool xtouch_wifi_setup()
     lv_task_handler();
     delay(1000);
 
-    configTime(0, 0, MY_NTP_SERVER);  // 0, 0 because we will use TZ in the next line
-    setenv("TZ", MY_TZ, 1);            // Set environment variable with your time zone
-    tzset();
+    
+    DynamicJsonDocument timezoneConfig = xtouch_filesystem_readJson(SD, xtouch_paths_timezones);
+    if (!timezoneConfig.isNull() && timezoneConfig.containsKey("ntp_server") && timezoneConfig.containsKey("timezone"))
+    {
+        configTime(0, 0, timezoneConfig["ntp_server"].as<const char *>());  // 0, 0 because we will use TZ in the next line
+        setenv("TZ", timezoneConfig["timezone"].as<const char *>(), 1);            // Set environment variable with your time zone
+        tzset();
+    }else{
+        configTime(0, 0, MY_NTP_SERVER);  // 0, 0 because we will use TZ in the next line
+        setenv("TZ", MY_TZ, 1);            // Set environment variable with your time zone
+        tzset();
+    }
+
     
     time(&now);
     localtime_r(&now, &tmst);
