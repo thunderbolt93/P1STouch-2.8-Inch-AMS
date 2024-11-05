@@ -10,6 +10,7 @@
 #define SLOT_COUNT 5
 #define AMS_BORDER 2
 
+extern int time12hFormat;
 unsigned long long slot_cache[SLOT_COUNT];
 
 char bed_target[10];
@@ -402,10 +403,33 @@ void onXTouchPrintStatus(lv_event_t *e)
 
     
     char percentAndRemaining[100]; // Adjust the size accordingly
-    if (delta_days>0){
-        sprintf(percentAndRemaining, "%s | +%dd %02d:%02d", remainingTimeText,delta_days,tm_end_time.tm_hour,tm_end_time.tm_min);
+
+    if (time12hFormat==1){
+        int hour= tm_end_time.tm_hour;
+        int hour12=0;
+        
+        char period[3]; // Array to hold "AM" or "PM"
+
+    // Find the appropriate 12-hour format and period (AM/PM)
+        if (hour == 0) {
+            hour12 = 12;
+            strcpy(period, "AM");
+        } else if (hour < 12) {
+            hour12 = hour;
+            strcpy(period, "AM");
+        } else if (hour == 12) {
+            hour12 = 12;
+            strcpy(period, "PM");
+        } else {
+            hour12 = hour - 12;
+            strcpy(period, "PM");
+        }
+
+        if (delta_days > 0) sprintf(percentAndRemaining, "%s | +%dd %02d:%02d %s", remainingTimeText, delta_days, hour12, tm_end_time.tm_min, period);
+        else sprintf(percentAndRemaining, "%s | %02d:%02d %s", remainingTimeText, hour12, tm_end_time.tm_min, period);
     }else{
-        sprintf(percentAndRemaining, "%s | %02d:%02d", remainingTimeText,tm_end_time.tm_hour,tm_end_time.tm_min);
+        if (delta_days > 0) sprintf(percentAndRemaining, "%s | +%dd %02d:%02d", remainingTimeText, delta_days, tm_end_time.tm_hour, tm_end_time.tm_min);
+        else sprintf(percentAndRemaining, "%s | %02d:%02d", remainingTimeText, tm_end_time.tm_hour, tm_end_time.tm_min);
     }
     
 
