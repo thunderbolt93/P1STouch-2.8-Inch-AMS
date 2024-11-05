@@ -7,6 +7,7 @@
 #define MY_TZ "CET-1CEST,M3.5.0,M10.5.0/3"
 time_t now;
 tm tmst;
+int time12hFormat=0;
 
 String xtouch_wifi_setup_decodeString(String inputString)
 {
@@ -136,6 +137,9 @@ bool xtouch_wifi_setup()
     DynamicJsonDocument timezoneConfig = xtouch_filesystem_readJson(SD, xtouch_paths_timezones);
     if (!timezoneConfig.isNull() && timezoneConfig.containsKey("ntp_server") && timezoneConfig.containsKey("timezone"))
     {
+        if (timezoneConfig.containsKey("12hFormat")){
+            time12hFormat = timezoneConfig["12hFormat"].as<int>();
+        }
         configTime(0, 0, timezoneConfig["ntp_server"].as<const char *>());  // 0, 0 because we will use TZ in the next line
         setenv("TZ", timezoneConfig["timezone"].as<const char *>(), 1);            // Set environment variable with your time zone
         tzset();
@@ -144,7 +148,6 @@ bool xtouch_wifi_setup()
         setenv("TZ", MY_TZ, 1);            // Set environment variable with your time zone
         tzset();
     }
-
     
     time(&now);
     localtime_r(&now, &tmst);
