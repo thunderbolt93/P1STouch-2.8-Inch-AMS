@@ -87,7 +87,7 @@ void sendError(AsyncWebServerRequest *request, String desc)
 void xtouch_webserver_begin()
 {
     Serial.println("Starting webserver...");
-    if (!MDNS.begin("xtouch"))
+    if (!MDNS.begin("P1STouch"))
     {
         Serial.println("Error starting mDNS");
         return;
