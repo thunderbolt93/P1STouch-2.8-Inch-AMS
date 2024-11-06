@@ -59,7 +59,7 @@ void xtouch_loadTouchConfig(XTouchPanelConfig &config)
     // Deserialize the JSON document
     DeserializationError error = deserializeJson(doc, file);
     if (error)
-        ConsoleError.println(F("[XTouch][Touch] Failed to read touch config"));
+        ConsoleError.println(F("[P1STouch][Touch] Failed to read touch config"));
 
     config.xCalM = doc["xCalM"].as<float>();
     config.yCalM = doc["yCalM"].as<float>();
@@ -81,7 +81,7 @@ void xtouch_saveTouchConfig(XTouchPanelConfig &config)
 
 void xtouch_resetTouchConfig()
 {
-    ConsoleInfo.println(F("[XTouch][FS] Resetting touch config"));
+    ConsoleInfo.println(F("[P1STouch][FS] Resetting touch config"));
     xtouch_filesystem_deleteFile(SD, xtouch_paths_touch);
     delay(500);
     ESP.restart();
@@ -89,7 +89,7 @@ void xtouch_resetTouchConfig()
 
 bool hasTouchConfig()
 {
-    ConsoleInfo.println(F("[XTouch][FS] Checking for touch config"));
+    ConsoleInfo.println(F("[P1STouch][FS] Checking for touch config"));
     return xtouch_filesystem_exist(SD, xtouch_paths_touch);
 }
 
@@ -97,12 +97,12 @@ void xtouch_touch_setup()
 {
     if (hasTouchConfig())
     {
-        ConsoleInfo.println(F("[XTouch][TOUCH] Load from disk"));
+        ConsoleInfo.println(F("[P1STouch][TOUCH] Load from disk"));
         xtouch_loadTouchConfig(x_touch_touchConfig);
     }
     else
     {
-        ConsoleInfo.println(F("[XTouch][TOUCH] Touch Setup"));
+        ConsoleInfo.println(F("[P1STouch][TOUCH] Touch Setup"));
         TS_Point p;
         int16_t x1, y1, x2, y2;
 
