@@ -77,7 +77,7 @@ void xtouch_screen_onScreenOff(lv_timer_t *timer)
         return;
     }
 
-    ConsoleInfo.println("[XTouch][SCREEN] Screen Off");
+    ConsoleInfo.println("[P1STouch][SCREEN] Screen Off");
     xtouch_screen_setBrightness(0);
     xtouch_screen_touchFromPowerOff = true;
 }
@@ -173,7 +173,7 @@ void xtouch_screen_touchRead(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
 void xtouch_screen_setup()
 {
 
-    ConsoleInfo.println("[XTouch][SCREEN] Setup");
+    ConsoleInfo.println("[P1STouch][SCREEN] Setup");
     pinMode(XPT2046_CS, OUTPUT);
     pinMode(TFT_CS, OUTPUT);
     pinMode(SD_CS, OUTPUT);

@@ -89,7 +89,7 @@ void xtouch_mqtt_update_slice_info(const char *project_id, const char *profile_i
 void xtouch_mqtt_processPushStatus(JsonDocument &incomingJson)
 {
     xtouch_mqtt_lastPushStatus = millis();
-    ConsoleDebug.println(F("[XTouch][MQTT] ProcessPushStatus"));
+    ConsoleDebug.println(F("[P1STouch][MQTT] ProcessPushStatus"));
 
     if (incomingJson != NULL && incomingJson.containsKey("print"))
     {
@@ -652,7 +652,7 @@ char payload_buffer[8096];
 void xtouch_mqtt_parseMessage(char *topic, byte *payload, unsigned int length, byte type = 0)
 {
 
-    ConsoleDebug.println(F("[XTouch][MQTT] ParseMessage"));
+    ConsoleDebug.println(F("[P1STouch][MQTT] ParseMessage"));
     DynamicJsonDocument incomingJson(XTOUCH_MQTT_SERVER_JSON_PARSE_SIZE);
 
     DynamicJsonDocument amsFilter(128);
@@ -676,7 +676,7 @@ void xtouch_mqtt_parseMessage(char *topic, byte *payload, unsigned int length, b
 
         if ((millis() - xtouch_mqtt_lastPushStatus) > (XTOUCH_MQTT_SERVER_PUSH_STATUS_TIMEOUT * 1000))
         {
-            Serial.println(F("[XTouch][MQTT] Force Reconnect after no Push Status for 30s"));
+            Serial.println(F("[P1STouch][MQTT] Force Reconnect after no Push Status for 30s"));
             xtouch_pubSubClient.disconnect();
         }
 
@@ -707,7 +707,7 @@ void xtouch_mqtt_parseMessage(char *topic, byte *payload, unsigned int length, b
             }
             else if (command == "gcode_line")
             {
-                ConsoleDebug.println(F("[XTouch][MQTT] gcode_line ack"));
+                ConsoleDebug.println(F("[P1STouch][MQTT] gcode_line ack"));
                 ConsoleDebug.println(String((char *)payload));
             }
 
@@ -746,7 +746,7 @@ void xtouch_mqtt_parseMessage(char *topic, byte *payload, unsigned int length, b
     }
     else
     {
-        ConsoleError.println(F("[XTouch][MQTT] ParseMessage deserializeJson failed"));
+        ConsoleError.println(F("[P1STouch][MQTT] ParseMessage deserializeJson failed"));
     }
 
     // if (firstParseMessage)
@@ -797,7 +797,7 @@ void xtouch_mqtt_onMqttReady()
 void xtouch_mqtt_connect()
 {
 
-    ConsoleInfo.println(F("[XTouch][MQTT] Connecting"));
+    ConsoleInfo.println(F("[P1STouch][MQTT] Connecting"));
 
     if (!xtouch_mqtt_firstConnectionDone)
     {
@@ -811,10 +811,10 @@ void xtouch_mqtt_connect()
 
     while (!xtouch_pubSubClient.connected())
     {
-        String clientId = "XTOUCH-CLIENT-" + String(xtouch_mqtt_generateRandomKey(16));
+        String clientId = "P1STOUCH-CLIENT-" + String(xtouch_mqtt_generateRandomKey(16));
         if (xtouch_pubSubClient.connect(clientId.c_str(), cloud.getUsername().c_str(), cloud.getAuthToken().c_str()))
         {
-            ConsoleInfo.println(F("[XTouch][MQTT] ---- CONNECTED ----"));
+            ConsoleInfo.println(F("[P1STouch][MQTT] ---- CONNECTED ----"));
 
             xtouch_pubSubClient.subscribe(xtouch_mqtt_report_topic.c_str());
             xtouch_device_pushall();
@@ -825,7 +825,7 @@ void xtouch_mqtt_connect()
         }
         else
         {
-            ConsoleError.printf("[XTouch][MQTT] ---- CONNECTION FAIL ----: %d\n", xtouch_pubSubClient.state());
+            ConsoleError.printf("[P1STouch][MQTT] ---- CONNECTION FAIL ----: %d\n", xtouch_pubSubClient.state());
 
             switch (xtouch_pubSubClient.state())
             {

@@ -1,9 +1,9 @@
 # LICENSE
 
-- [Standard Edition GPLv3](#standard-edition)
-- [Commercial License for OEM use](#xtouch-commercial-license-for-oem-use)
-- [Logo Copyright and Usage Agreement](#logo-copyright-and-usage-agreement)
-- [Third Party Licenses](LICENSE-3RD-PARTY.md)
+- [LICENSE](#license)
+  - [Standard Edition](#standard-edition)
+  - [Xtouch Commercial License for OEM Use](#xtouch-commercial-license-for-oem-use)
+  - [Logo Copyright and Usage Agreement](#logo-copyright-and-usage-agreement)
 
 ## Standard Edition
 
